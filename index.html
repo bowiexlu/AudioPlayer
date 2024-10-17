@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Programmering - Audio Player</title>
+<!-- Set charset to allow ÅÄÖ -->
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script defer src="js/script.js"></script>
+<!-- CSS AND JS END -->
+
+<!-- Set viewport to make responsive design possible -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<audio id="audio-player">
+  <source src="" type="audio/mpeg">
+</audio>
+
+<div id="wrapper">
+	<div id="player-area" class="text-center">
+		<input type="range" id="volume-control" min="0" max="1" step="0.01">
+		<div class="content-row icon-row p-20">
+			<i class="fa-solid fa-arrow-rotate-right"></i>
+			<i class="fa-solid fa-volume-xmark"></i>
+			<i class="fa-solid fa-shuffle" onclick=""></i>
+		</div>
+		<div class="content-row now-playing p-20">
+			<span class="heading-text">Now Playing</span>
+		</div>
+		
+		<div class="content-row flex-center">
+			<img src="" id="album-cover" class="responsive-img" alt="Cover image">
+		</div>
+		
+		<div class="content-row">
+			<span class="width-100" id="song-title"></span>
+		</div>
+		
+		<div class="content-row">
+			<span class="width-100" id="song-artist"></span>	
+		</div>
+		
+		<div class="content-row">
+			<span class="" id="timer-now">0:00</span>			
+			<input type="range" class="width-100" id="progress-bar" min="0" max="100" step="1" value="0" onchange=""></input>
+			<span class="" id="timer-total">0:00</span>
+		</div>
+		
+		
+		<div class="content-row icon-row p-20">
+			<i class="fa-solid fa-stop"></i>
+			<i class="fa-solid fa-backward-step" onclick=""></i>
+			<i class="fa-solid fa-play" onclick=""></i>
+			<i class="fa-solid fa-forward-step" onclick=""></i>
+			<i class="fa-solid fa-pause" onclick=""></i>			
+		</div>
+		
+		<div id="playlist">
+			<div class="content-row p-20 flex-center">
+				<span class="playlist-item">Låtnamn - Artistnamn</span>
+			</div>
+
+		</div>
+		
+	</div>
+</div>
+
+
+</body>
+</html> 
