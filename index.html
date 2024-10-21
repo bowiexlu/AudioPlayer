@@ -20,15 +20,18 @@
 
 <div id="wrapper">
 	<div id="player-area" class="text-center">
+		<!-- Volume progress bar -->
 		<input type="range" id="volume-control" min="0" max="1" step="0.01" value="0.5">
 		
 		<div class="content-row icon-row p-20">
 			<i class="fa-solid fa-arrow-rotate-right"></i>
 			<i class="fa-solid fa-volume-xmark" id="mute-button"></i>
+			<i class="fa-solid fa-volume-high" id="volume-icon"></i>
 			<i class="fa-solid fa-shuffle" onclick="" id="shuffle-button"></i>
 		</div>
 		<div class="content-row now-playing p-20">
-			<span class="heading-text">Now Playing</span>
+			<!-- Heanding text also display the song's name -->
+			<span class="heading-text" id="now-playing-text">Now Playing</span>
 		</div>
 		
 		<div class="content-row flex-center">
@@ -53,9 +56,9 @@
 		<div class="content-row icon-row p-20">
 			<i class="fa-solid fa-stop" id="stop-button"></i>
 			<i class="fa-solid fa-backward-step" id="prev-button" onclick=""></i>
-			<i class="fa-solid fa-play" id="play-button" onclick=""></i>
+			<i class="fa-solid fa-play" id="play-button" onclick="togglePlayPause()"></i>
+			<i class="fa-solid fa-pause" id="pause-button" style="display: none;" onclick="togglePlayPause()"></i>	
 			<i class="fa-solid fa-forward-step" id="next-button" onclick=""></i>
-			<i class="fa-solid fa-pause" id="pause-button" onclick=""></i>			
 		</div>
 		
 		<div id="playlist">
