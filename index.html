@@ -22,13 +22,15 @@
 	<div id="player-area" class="text-center">
 		<!-- Volume progress bar -->
 		<input type="range" id="volume-control" min="0" max="1" step="0.01" value="0.5">
+		<span id="volume-percentage">50%</span>
+            <i id="volume-icon" class="fa-solid fa-volume-high"></i>
 		
 		<div class="content-row icon-row p-20">
-			<i class="fa-solid fa-arrow-rotate-right"></i>
+			<i class="fa-solid fa-arrow-rotate-right" id="stop-button"></i>
 			<i class="fa-solid fa-volume-xmark" id="mute-button"></i>
-			<i class="fa-solid fa-volume-high" id="volume-icon"></i>
 			<i class="fa-solid fa-shuffle" onclick="" id="shuffle-button"></i>
 		</div>
+
 		<div class="content-row now-playing p-20">
 			<!-- Heanding text also display the song's name -->
 			<span class="heading-text" id="now-playing-text">Now Playing</span>
@@ -38,9 +40,9 @@
 			<img src="" id="album-cover" class="responsive-img" alt="Cover image">
 		</div>
 		
-		<div class="content-row">
+		<!-- <div class="content-row">
 			<span class="width-100" id="song-title"></span>
-		</div>
+		</div> -->
 		
 		<div class="content-row">
 			<span class="width-100" id="song-artist"></span>	
@@ -54,19 +56,17 @@
 		
 		
 		<div class="content-row icon-row p-20">
-			<i class="fa-solid fa-stop" id="stop-button"></i>
 			<i class="fa-solid fa-backward-step" id="prev-button" onclick=""></i>
-			<i class="fa-solid fa-play" id="play-button" onclick="togglePlayPause()"></i>
-			<i class="fa-solid fa-pause" id="pause-button" style="display: none;" onclick="togglePlayPause()"></i>	
+			<i id="play-button" class="fa-solid fa-play"></i>
+                <i id="pause-button" class="fa-solid fa-pause" style="display:none"></i>
 			<i class="fa-solid fa-forward-step" id="next-button" onclick=""></i>
 		</div>
 		
-		<div id="playlist">
+		<!-- <div id="playlist">
 			<div class="content-row p-20 flex-center">
 				<span class="playlist-item" id="playlist-item-1">Låtnamn - Artistnamn</span>
 			</div>
-
-		</div>
+		</div> -->
 		
 	</div>
 </div>

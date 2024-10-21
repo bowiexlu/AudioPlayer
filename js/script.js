@@ -1,26 +1,25 @@
 const songList = [
-	{
-	name: "Fade",
-	artist: "Alan Walker",
-	imageSrc: "img/bild1.jpg",
-	soundSrc: "audio/Alan Walker - Fade.mp3"
-	},
-	{
-	name: "Arc",
-	artist: "NCS",
-	imageSrc: "img/bild2.jpg",
-	soundSrc: "audio/NCS - Ark.mp3"
-	},
-	{
-	name: "Weapon",
-	artist: "M4SONIC",
-	imageSrc: "img/bild3.jpg",
-	soundSrc: "audio/M4SONIC - Weapon.mp3"
-	},
+  {
+      name: "Fade",
+      artist: "Alan Walker",
+      imageSrc: "img/bild1.jpg",
+      soundSrc: "audio/Alan Walker - Fade.mp3"
+  },
+  {
+      name: "Arc",
+      artist: "NCS",
+      imageSrc: "img/bild2.jpg",
+      soundSrc: "audio/NCS - Ark.mp3"
+  },
+  {
+      name: "Weapon",
+      artist: "M4SONIC",
+      imageSrc: "img/bild3.jpg",
+      soundSrc: "audio/M4SONIC - Weapon.mp3"
+  },
 ];
 
 let currentSongIndex = 0;
-
 const audioPlayer = document.getElementById('audio-player');
 const albumCover = document.getElementById('album-cover');
 const songTitle = document.getElementById('song-title');
@@ -35,144 +34,151 @@ const volumePercentage = document.getElementById('volume-percentage');
 const volumeIcon = document.getElementById('volume-icon');
 let lastVolume = 0.5;
 
-// LoadSong function
+// Load song function
 function loadSong(songIndex) {
-	const song = songList[songIndex];
-	audioPlayer.src = song.soundSrc;
-	albumCover.src = song.imageSrc;
-	songTitle.textContent = song.name;
-	songArtist.textContent = song.artist;
+  const song = songList[songIndex];
+  audioPlayer.src = song.soundSrc;
+  albumCover.src = song.imageSrc;
+  songTitle.textContent = song.name;
+  songArtist.textContent = song.artist;
 
-	// Update the text to display the song's name
-	const nowPlayingText = document.getElementById('now-playing-text');
-	nowPlayingText.textContent = `Now Playing: ${song.name}`;
-	
-	audioPlayer.load();  
-	audioPlayer.play();  
-	togglePlayPauseButtons();  
-  }
+  // Reset progress bar and timer
+  progressBar.value = 0;
+  timerNow.textContent = '0:00';
+  timerTotal.textContent = '0:00';
+  audioPlayer.currentTime = 0;
 
-  // Play/pause toggle button
-  function togglePlayPauseButtons() {
-	if (audioPlayer.paused) {
-	  playButton.style.display = 'inline';  
-	  pauseButton.style.display = 'none';   
-	} else {
-	  playButton.style.display = 'none';    
-	  pauseButton.style.display = 'inline'; 
-	}
-  }
-  
-  // Play the music
-  function playAudio() {
-	if (audioPlayer.paused) {
-	  audioPlayer.play();
-	}
-	togglePlayPauseButtons();
-  }
-   // Pause the music
-  function pauseAudio() {
-	if (!audioPlayer.paused) {
-	  audioPlayer.pause();
-	}
-	togglePlayPauseButtons();
-  }
-  
-  // Stop the music and return to the beginning of the current song
-  function stopAudio() {
-	audioPlayer.pause();
-	audioPlayer.currentTime = 0;
-	loadSong(currentSongIndex); 
-	togglePlayPauseButtons(); 
-  }
-  
-  // Play next song
-  function nextSong() {
-	currentSongIndex = (currentSongIndex + 1) % songList.length;
-	loadSong(currentSongIndex);
-  }
-  
-  function prevSong() {
-	currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
-	loadSong(currentSongIndex);
-  }
-  
-  function updateProgressBar() {
-	const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-	progressBar.value = progress;
-	const minutes = Math.floor(audioPlayer.currentTime / 60);
-	const seconds = Math.floor(audioPlayer.currentTime % 60);
-	timerNow.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  }
-  
-  function setProgress() {
-	const newTime = (progressBar.value / 100) * audioPlayer.duration;
-	audioPlayer.currentTime = newTime;
-  }
-  
-  function updateDuration() {
-	const minutes = Math.floor(audioPlayer.duration / 60);
-	const seconds = Math.floor(audioPlayer.duration % 60);
-	timerTotal.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  }
+  // Update Now Playing text
+  const nowPlayingText = document.getElementById('now-playing-text');
+  nowPlayingText.textContent = `Now Playing: ${song.name}`;
 
-  //..................................................................................
+  // Load and play the song after metadata is loaded
+  audioPlayer.load();
+  audioPlayer.addEventListener('loadedmetadata', function () {
+      audioPlayer.play();
+      togglePlayPauseButtons();
+      updateDuration();
+  });
+}
 
-// Input event listener for volume progress bar
-volumeControl.addEventListener('input', function() {
-  const volume = volumeControl.value;
-  audioPlayer.volume = volume;  
-  volumePercentage.textContent = `${Math.floor(volume * 100)}%`;  
-
-  // Display volume icon
-  updateVolumeIcon(volume);
-});
-
-// For muting and restoring volume
-volumeIcon.addEventListener('click', function() {
-  if (audioPlayer.volume > 0) {
-    lastVolume = audioPlayer.volume;  // Save current volume
-    audioPlayer.volume = 0;           // Set to mute
-    volumeControl.value = 0;          // Reset the progress bar
-    volumePercentage.textContent = '0%'; 
-    updateVolumeIcon(0);              // Display the mute icon
+// Play/pause toggle button
+function togglePlayPauseButtons() {
+  if (audioPlayer.paused) {
+      playButton.style.display = 'inline';
+      pauseButton.style.display = 'none';
   } else {
-    audioPlayer.volume = lastVolume;  // Restore the previous volume
-    volumeControl.value = lastVolume; // Update the progress bar
-    volumePercentage.textContent = `${Math.floor(lastVolume * 100)}%`;
-    updateVolumeIcon(lastVolume);     // Update to the normal icon
-  }
-});
-
-// Function to update the volume icon and switch the icon according to the volume
-function updateVolumeIcon(volume) {
-  if (volume == 0) {
-    volumeIcon.classList.remove('fa-volume-low', 'fa-volume-high');
-    volumeIcon.classList.add('fa-volume-xmark');  
-  } else if (volume > 0 && volume <= 0.5) {
-    volumeIcon.classList.remove('fa-volume-xmark', 'fa-volume-high');
-    volumeIcon.classList.add('fa-volume-low');    
-  } else {
-    volumeIcon.classList.remove('fa-volume-xmark', 'fa-volume-low');
-    volumeIcon.classList.add('fa-volume-high');  
+      playButton.style.display = 'none';
+      pauseButton.style.display = 'inline';
   }
 }
 
-// Initialize volume icon
-updateVolumeIcon(audioPlayer.volume);
+// Toggle play/pause function
+function togglePlayPause() {
+  if (audioPlayer.paused) {
+      audioPlayer.play();
+  } else {
+      audioPlayer.pause();
+  }
+  togglePlayPauseButtons();
+}
 
-  
-  // Event listener
-  document.getElementById('play-button').addEventListener('click', playAudio);
-  document.getElementById('pause-button').addEventListener('click', pauseAudio);
-  document.getElementById('stop-button').addEventListener('click', stopAudio);
-  document.getElementById('next-button').addEventListener('click', nextSong);
-  document.getElementById('prev-button').addEventListener('click', prevSong);
-  
-  audioPlayer.addEventListener('timeupdate', updateProgressBar);
-  audioPlayer.addEventListener('loadedmetadata', updateDuration);
-  
-  progressBar.addEventListener('input', setProgress);
-  
-  // Initialize the player with the first song
+// Stop the music
+function stopAudio() {
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
+  togglePlayPauseButtons();
+}
+
+// Play next song
+function nextSong() {
+  currentSongIndex = (currentSongIndex + 1) % songList.length;
   loadSong(currentSongIndex);
+}
+
+// Play previous song
+function prevSong() {
+  currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
+  loadSong(currentSongIndex);
+}
+
+// Update progress bar and time
+function updateProgressBar() {
+  const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+  progressBar.value = progress;
+
+  const minutes = Math.floor(audioPlayer.currentTime / 60);
+  const seconds = Math.floor(audioPlayer.currentTime % 60);
+  timerNow.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
+// Set progress bar position
+function setProgress() {
+  const newTime = (progressBar.value / 100) * audioPlayer.duration;
+  audioPlayer.currentTime = newTime;
+}
+
+// Update duration
+function updateDuration() {
+  const minutes = Math.floor(audioPlayer.duration / 60);
+  const seconds = Math.floor(audioPlayer.duration % 60);
+  timerTotal.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
+// Volume control event listener
+volumeControl.addEventListener('input', function () {
+  const volume = volumeControl.value;
+  audioPlayer.volume = volume;
+  volumePercentage.textContent = `${Math.floor(volume * 100)}%`;
+  updateVolumeIcon(volume);
+});
+
+// Mute and restore volume
+volumeIcon.addEventListener('click', function () {
+  if (audioPlayer.volume > 0) {
+      lastVolume = audioPlayer.volume;
+      audioPlayer.volume = 0;
+      volumeControl.value = 0;
+      volumePercentage.textContent = '0%';
+      updateVolumeIcon(0);
+  } else {
+      audioPlayer.volume = lastVolume;
+      volumeControl.value = lastVolume;
+      volumePercentage.textContent = `${Math.floor(lastVolume * 100)}%`;
+      updateVolumeIcon(lastVolume);
+  }
+});
+
+// Update volume icon based on volume level
+function updateVolumeIcon(volume) {
+  if (volume == 0) {
+      volumeIcon.classList.remove('fa-volume-low', 'fa-volume-high');
+      volumeIcon.classList.add('fa-volume-xmark');
+  } else if (volume > 0 && volume <= 0.5) {
+      volumeIcon.classList.remove('fa-volume-xmark', 'fa-volume-high');
+      volumeIcon.classList.add('fa-volume-low');
+  } else {
+      volumeIcon.classList.remove('fa-volume-xmark', 'fa-volume-low');
+      volumeIcon.classList.add('fa-volume-high');
+  }
+}
+
+// Event listeners for play/pause and control buttons
+playButton.addEventListener('click', togglePlayPause);
+pauseButton.addEventListener('click', togglePlayPause);
+document.getElementById('stop-button').addEventListener('click', stopAudio);
+document.getElementById('next-button').addEventListener('click', nextSong);
+document.getElementById('prev-button').addEventListener('click', prevSong);
+
+// Update progress bar as song plays
+audioPlayer.addEventListener('timeupdate', updateProgressBar);
+audioPlayer.addEventListener('loadedmetadata', updateDuration);
+progressBar.addEventListener('input', setProgress);
+
+// Initialize player with the first song
+document.addEventListener('DOMContentLoaded', function () {
+  loadSong(currentSongIndex);
+  audioPlayer.volume = 0.5;
+  volumeControl.value = 0.5;
+  volumePercentage.textContent = '50%';
+  updateVolumeIcon(audioPlayer.volume);
+});
