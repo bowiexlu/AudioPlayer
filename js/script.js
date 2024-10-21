@@ -41,11 +41,11 @@ function loadSong(songIndex) {
   const song = songList[songIndex];
   audioPlayer.src = song.soundSrc;
   albumCover.src = song.imageSrc;
-  songTitle.textContent = song.name;
   songArtist.textContent = song.artist;
 
   // Reset progress bar and timer
   progressBar.value = 0;
+  progressBar.style.backgroundSize = '0% 100%';
   timerNow.textContent = '0:00';
   timerTotal.textContent = '0:00';
   audioPlayer.currentTime = 0;
@@ -217,8 +217,15 @@ document.getElementById('prev-button').addEventListener('click', prevSong);
 
 // Update progress bar as song plays
 audioPlayer.addEventListener('timeupdate', updateProgressBar);
-audioPlayer.addEventListener('loadedmetadata', updateDuration);
 progressBar.addEventListener('input', setProgress);
+
+audioPlayer.addEventListener('loadedmetadata', function() {
+  progressBar.value = 0;             
+  progressBar.style.backgroundSize = '0% 100%'; 
+  const minutes = Math.floor(audioPlayer.duration / 60);
+  const seconds = Math.floor(audioPlayer.duration % 60);
+  timerTotal.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`; 
+});
 
 // Initialize player with the first song
 document.addEventListener('DOMContentLoaded', function () {
