@@ -33,6 +33,8 @@ const volumeControl = document.getElementById('volume-control');
 const volumePercentage = document.getElementById('volume-percentage');
 const volumeIcon = document.getElementById('volume-icon');
 let lastVolume = 0.5;
+let isShuffle = false;  
+let shuffledList = [];
 
 // Load song function
 function loadSong(songIndex) {
@@ -87,12 +89,55 @@ function stopAudio() {
   audioPlayer.pause();
   audioPlayer.currentTime = 0;
   togglePlayPauseButtons();
+
+  document.getElementById('stop-button').addEventListener('click', stopAudio);
 }
+
 
 // Play next song
 function nextSong() {
   currentSongIndex = (currentSongIndex + 1) % songList.length;
   loadSong(currentSongIndex);
+}
+
+// Shuffle the song list
+function shuffleSongs() {
+  isShuffle = !isShuffle; 
+  if (isShuffle) {
+      shuffledList = [...songList];  // Copy the songlist
+      for (let i = shuffledList.length - 1; i > 0; i--) {  
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
+      }
+      currentSongIndex = 0; 
+      loadSong(currentSongIndex); 
+  } else {
+      shuffledList = [];  
+      currentSongIndex = 0; 
+      loadSong(currentSongIndex); 
+  }
+  updateShuffleButton();  
+}
+
+// Update shuffle icon
+function updateShuffleButton() {
+  const shuffleButton = document.getElementById('shuffle-button');
+  if (isShuffle) {
+      shuffleButton.classList.add('active');  
+  } else {
+      shuffleButton.classList.remove('active');
+  }
+}
+
+// if the next song is in shuffle mode
+function nextSong() {
+  if (isShuffle) {
+      currentSongIndex = (currentSongIndex + 1) % shuffledList.length;
+      loadSong(currentSongIndex);
+  } else {
+      currentSongIndex = (currentSongIndex + 1) % songList.length;
+      loadSong(currentSongIndex);
+  }
 }
 
 // Play previous song
@@ -166,6 +211,7 @@ function updateVolumeIcon(volume) {
 playButton.addEventListener('click', togglePlayPause);
 pauseButton.addEventListener('click', togglePlayPause);
 document.getElementById('stop-button').addEventListener('click', stopAudio);
+document.getElementById('shuffle-button').addEventListener('click', shuffleSongs);
 document.getElementById('next-button').addEventListener('click', nextSong);
 document.getElementById('prev-button').addEventListener('click', prevSong);
 
