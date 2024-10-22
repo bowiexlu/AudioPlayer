@@ -42,10 +42,6 @@ i {
 	font-size: 1.8rem;
 }
 
-.active {
-    background-color: pink; 
-}
-
 .responsive-img {
 	max-width: 100%;
 	height: auto;
