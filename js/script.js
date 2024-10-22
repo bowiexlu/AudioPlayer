@@ -83,10 +83,6 @@ function togglePlayPause() {
   }
 }
 
-audioPlayer.addEventListener('loadedmetadata', function () {
-  updateDuration();  
-});
-
 // Play button event listener 
 playButton.addEventListener('click', function () {
   togglePlayPause();  
@@ -97,10 +93,20 @@ pauseButton.addEventListener('click', function () {
   togglePlayPause();  
 });
 
-// Initialize the player with the first song when page is ready
+// Initialize the player 
 document.addEventListener('DOMContentLoaded', function () {
   loadSong(currentSongIndex);
+  audioPlayer.volume = 0.5;
+  volumeControl.value = 0.5;
+  volumePercentage.textContent = '50%';
+  updateVolumeIcon(audioPlayer.volume);
+
+  // Add event listener for progress and duration updates
+  audioPlayer.addEventListener('loadedmetadata', function() {
+      updateDuration();  
+  });
 });
+
 
 // Stop the music
 function stopAudio() {
