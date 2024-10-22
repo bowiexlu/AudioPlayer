@@ -54,7 +54,6 @@ function loadSong(songIndex) {
   const nowPlayingText = document.getElementById('now-playing-text');
   nowPlayingText.textContent = `Now Playing: ${song.name}`;
 
-  // Load the song
   audioPlayer.load();
 }
 
@@ -84,28 +83,10 @@ function togglePlayPause() {
 }
 
 // Play button event listener 
-playButton.addEventListener('click', function () {
-  togglePlayPause();  
-});
+playButton.addEventListener('click', togglePlayPause);
 
 // Pause button event listener
-pauseButton.addEventListener('click', function () {
-  togglePlayPause();  
-});
-
-// Initialize the player 
-document.addEventListener('DOMContentLoaded', function () {
-  loadSong(currentSongIndex);
-  audioPlayer.volume = 0.5;
-  volumeControl.value = 0.5;
-  volumePercentage.textContent = '50%';
-  updateVolumeIcon(audioPlayer.volume);
-
-  // Add event listener for progress and duration updates
-  audioPlayer.addEventListener('loadedmetadata', function() {
-      updateDuration();  
-  });
-});
+pauseButton.addEventListener('click', togglePlayPause);
 
 
 // Stop the music
@@ -113,26 +94,15 @@ function stopAudio() {
   audioPlayer.pause();
   audioPlayer.currentTime = 0;
   togglePlayPauseButtons();
-
-  document.getElementById('stop-button').addEventListener('click', stopAudio);
 }
 
-
-// Play next song
-function nextSong() {
-  currentSongIndex = (currentSongIndex + 1) % songList.length;
-  loadSong(currentSongIndex);
-}
-
-audioPlayer.addEventListener('ended', function () {
-  nextSong();  
-});
+document.getElementById('stop-button').addEventListener('click', stopAudio);
 
 // Shuffle the song list
 function shuffleSongs() {
   isShuffle = !isShuffle; 
   if (isShuffle) {
-      shuffledList = [...songList];  // Copy the songlist
+      shuffledList = [...songList];  
       for (let i = shuffledList.length - 1; i > 0; i--) {  
           const j = Math.floor(Math.random() * (i + 1));
           [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
@@ -235,27 +205,7 @@ function updateVolumeIcon(volume) {
   }
 }
 
-// Event listeners for play/pause and control buttons
-playButton.addEventListener('click', togglePlayPause);
-pauseButton.addEventListener('click', togglePlayPause);
-document.getElementById('stop-button').addEventListener('click', stopAudio);
-document.getElementById('shuffle-button').addEventListener('click', shuffleSongs);
-document.getElementById('next-button').addEventListener('click', nextSong);
-document.getElementById('prev-button').addEventListener('click', prevSong);
-
-// Update progress bar as song plays
-audioPlayer.addEventListener('timeupdate', updateProgressBar);
-progressBar.addEventListener('input', setProgress);
-
-audioPlayer.addEventListener('loadedmetadata', function() {
-  progressBar.value = 0;             
-  progressBar.style.backgroundSize = '0% 100%'; 
-  const minutes = Math.floor(audioPlayer.duration / 60);
-  const seconds = Math.floor(audioPlayer.duration % 60);
-  timerTotal.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`; 
-});
-
-// Initialize with the first song
+// Initialize 
 document.addEventListener('DOMContentLoaded', function () {
   loadSong(currentSongIndex);
   audioPlayer.volume = 0.5;
@@ -263,7 +213,24 @@ document.addEventListener('DOMContentLoaded', function () {
   volumePercentage.textContent = '50%';
   updateVolumeIcon(audioPlayer.volume);
 
-  audioPlayer.addEventListener('ended', function () {
-    nextSong(); 
+  // Add event listener for progress and duration updates
+  audioPlayer.addEventListener('loadedmetadata', function() {
+      updateDuration();
   });
+
+  // Automatically play the next song when current one ends
+  audioPlayer.addEventListener('ended', function () {
+      nextSong();
+  });
+
+  // Update progress bar as song plays
+  audioPlayer.addEventListener('timeupdate', updateProgressBar);
+  progressBar.addEventListener('input', setProgress);
 });
+
+// Event listeners 
+document.getElementById('shuffle-button').addEventListener('click', shuffleSongs);
+document.getElementById('next-button').addEventListener('click', nextSong);
+document.getElementById('prev-button').addEventListener('click', prevSong);
+
+
