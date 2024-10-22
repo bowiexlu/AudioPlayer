@@ -99,41 +99,48 @@ function stopAudio() {
 
 document.getElementById('stop-button').addEventListener('click', stopAudio);
 
-// Shuffle the song list
-function shuffleSongs() {
+// Toggle between shuffle and order modes when icons are clicked
+function toggleShuffleOrder() {
   isShuffle = !isShuffle; 
 
   if (isShuffle) {
-      shuffledList = [...songList];  
-      for (let i = shuffledList.length - 1; i > 0; i--) {  
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
-      }
-      currentSongIndex = 0; 
-      loadSong(currentSongIndex); 
+    // Enable shuffle mode
+    shuffledList = [...songList];  
+    for (let i = shuffledList.length - 1; i > 0; i--) {  
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
+    }
+    currentSongIndex = 0;  
+    loadSong(currentSongIndex);  
   } else {
-      shuffledList = [];  
-      currentSongIndex = 0; 
-      loadSong(currentSongIndex); 
+    // Disable shuffle mode (back to order mode)
+    shuffledList = [];  
+    currentSongIndex = 0;  
+    loadSong(currentSongIndex);  
   }
-  updateShuffleButton();  
+
+  updateShuffleOrderIcons();  
 }
 
 // Update shuffle icon and order icon
-function updateShuffleButton() {
+function updateShuffleOrderIcons() {
   const shuffleButton = document.getElementById('shuffle-button');
   const orderButton = document.getElementById('order-button');
 
   if (isShuffle) {
-      shuffleButton.style.display = 'inline';   
-      orderButton.style.display = 'none';       
-      shuffleButton.classList.add('active');    
+    shuffleButton.style.display = 'inline';  
+    orderButton.style.display = 'none';      
+    shuffleButton.classList.add('active');   
   } else {
-      shuffleButton.style.display = 'none';     
-      orderButton.style.display = 'inline';     
-      shuffleButton.classList.remove('active'); 
+    shuffleButton.style.display = 'none';    
+    orderButton.style.display = 'inline';    
+    shuffleButton.classList.remove('active');
   }
 }
+
+// Event listeners for shuffle and order icons
+document.getElementById('shuffle-button').addEventListener('click', toggleShuffleOrder);
+document.getElementById('order-button').addEventListener('click', toggleShuffleOrder);
 
 // If the next song is in shuffle mode
 function nextSong() {
