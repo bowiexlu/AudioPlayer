@@ -55,6 +55,7 @@ function loadSong(songIndex) {
   nowPlayingText.textContent = `Now Playing: ${song.name}`;
 
   audioPlayer.load();
+  togglePlayPauseButtons();
 }
 
 // Play/pause toggle button
@@ -213,19 +214,30 @@ document.addEventListener('DOMContentLoaded', function () {
   volumePercentage.textContent = '50%';
   updateVolumeIcon(audioPlayer.volume);
 
+  progressBar.value = 0;             
+  progressBar.style.backgroundSize = '0% 100%'; 
+  timerNow.textContent = '0:00'; 
+  timerTotal.textContent = '0:00'; 
+
   // Add event listener for progress and duration updates
   audioPlayer.addEventListener('loadedmetadata', function() {
+      progressBar.value = 0;             
+      progressBar.style.backgroundSize = '0% 100%';  
+      const minutes = Math.floor(audioPlayer.duration / 60);
+      const seconds = Math.floor(audioPlayer.duration % 60);
+      timerTotal.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`; 
       updateDuration();
-  });
-
-  // Automatically play the next song when current one ends
-  audioPlayer.addEventListener('ended', function () {
-      nextSong();
   });
 
   // Update progress bar as song plays
   audioPlayer.addEventListener('timeupdate', updateProgressBar);
   progressBar.addEventListener('input', setProgress);
+
+  // Automatically play the next song when current one ends
+  audioPlayer.addEventListener('ended', function () {
+    nextSong();
+  });
+
 });
 
 // Event listeners 
