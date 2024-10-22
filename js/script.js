@@ -260,7 +260,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Event listeners 
-document.getElementById('shuffle-button').addEventListener('click', shuffleSongs);
 document.getElementById('next-button').addEventListener('click', nextSong);
 document.getElementById('prev-button').addEventListener('click', prevSong);
 
