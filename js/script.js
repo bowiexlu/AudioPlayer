@@ -102,6 +102,7 @@ document.getElementById('stop-button').addEventListener('click', stopAudio);
 // Shuffle the song list
 function shuffleSongs() {
   isShuffle = !isShuffle; 
+
   if (isShuffle) {
       shuffledList = [...songList];  
       for (let i = shuffledList.length - 1; i > 0; i--) {  
@@ -118,13 +119,19 @@ function shuffleSongs() {
   updateShuffleButton();  
 }
 
-// Update shuffle icon
+// Update shuffle icon and order icon
 function updateShuffleButton() {
   const shuffleButton = document.getElementById('shuffle-button');
+  const orderButton = document.getElementById('order-button');
+
   if (isShuffle) {
-      shuffleButton.classList.add('active');  
+      shuffleButton.style.display = 'inline';   
+      orderButton.style.display = 'none';       
+      shuffleButton.classList.add('active');    
   } else {
-      shuffleButton.classList.remove('active');
+      shuffleButton.style.display = 'none';     
+      orderButton.style.display = 'inline';     
+      shuffleButton.classList.remove('active'); 
   }
 }
 
