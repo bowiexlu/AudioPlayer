@@ -22,6 +22,10 @@ i {
 	padding: 15px;
 
 }
+#song-artist {
+	font-size: 28px;
+	padding: 12px;
+}
 
 .content-row {
 	width: 100%;
