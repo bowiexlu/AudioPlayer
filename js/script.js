@@ -54,13 +54,8 @@ function loadSong(songIndex) {
   const nowPlayingText = document.getElementById('now-playing-text');
   nowPlayingText.textContent = `Now Playing: ${song.name}`;
 
-  // Load and play the song after metadata is loaded
+  // Load the song
   audioPlayer.load();
-  audioPlayer.addEventListener('loadedmetadata', function () {
-      audioPlayer.play();
-      togglePlayPauseButtons();
-      updateDuration();
-  });
 }
 
 // Play/pause toggle button
@@ -77,12 +72,35 @@ function togglePlayPauseButtons() {
 // Toggle play/pause function
 function togglePlayPause() {
   if (audioPlayer.paused) {
-      audioPlayer.play();
+      audioPlayer.play().then(() => {
+          togglePlayPauseButtons();  
+      }).catch(error => {
+          console.error('Playback failed:', error);
+      });
   } else {
       audioPlayer.pause();
+      togglePlayPauseButtons();  
   }
-  togglePlayPauseButtons();
 }
+
+audioPlayer.addEventListener('loadedmetadata', function () {
+  updateDuration();  
+});
+
+// Play button event listener 
+playButton.addEventListener('click', function () {
+  togglePlayPause();  
+});
+
+// Pause button event listener
+pauseButton.addEventListener('click', function () {
+  togglePlayPause();  
+});
+
+// Initialize the player with the first song when page is ready
+document.addEventListener('DOMContentLoaded', function () {
+  loadSong(currentSongIndex);
+});
 
 // Stop the music
 function stopAudio() {
@@ -99,6 +117,10 @@ function nextSong() {
   currentSongIndex = (currentSongIndex + 1) % songList.length;
   loadSong(currentSongIndex);
 }
+
+audioPlayer.addEventListener('ended', function () {
+  nextSong();  
+});
 
 // Shuffle the song list
 function shuffleSongs() {
@@ -129,7 +151,7 @@ function updateShuffleButton() {
   }
 }
 
-// if the next song is in shuffle mode
+// If the next song is in shuffle mode
 function nextSong() {
   if (isShuffle) {
       currentSongIndex = (currentSongIndex + 1) % shuffledList.length;
@@ -227,11 +249,15 @@ audioPlayer.addEventListener('loadedmetadata', function() {
   timerTotal.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`; 
 });
 
-// Initialize player with the first song
+// Initialize with the first song
 document.addEventListener('DOMContentLoaded', function () {
   loadSong(currentSongIndex);
   audioPlayer.volume = 0.5;
   volumeControl.value = 0.5;
   volumePercentage.textContent = '50%';
   updateVolumeIcon(audioPlayer.volume);
+
+  audioPlayer.addEventListener('ended', function () {
+    nextSong(); 
+  });
 });
