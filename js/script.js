@@ -137,6 +137,11 @@ function nextSong() {
       currentSongIndex = (currentSongIndex + 1) % songList.length;
       loadSong(currentSongIndex);
   }
+  audioPlayer.play().then(() => {
+    togglePlayPauseButtons(); 
+  }).catch(error => {
+      console.error('Playback failed:', error);
+  });
 }
 
 // Play previous song
