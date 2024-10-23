@@ -219,7 +219,7 @@ function updateVolumeIcon(volume) {
 
 // Function to generate playlist 
 function generatePlaylist() {
-  // const playlistContainer = document.getElementById('playlist');
+  const playlistContainer = document.getElementById('playlist');
   playlistContainer.innerHTML = '';  
 
   songList.forEach((song, index) => {
