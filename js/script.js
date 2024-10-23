@@ -55,6 +55,11 @@ function loadSong(songIndex) {
   nowPlayingText.textContent = `Now Playing: ${song.name}`;
 
   audioPlayer.load();
+  audioPlayer.addEventListener('loadedmetadata', function () {
+    updateProgressBar();   
+    updateDuration();      
+  });
+
   togglePlayPauseButtons();
   generatePlaylist();
 }
@@ -262,17 +267,11 @@ document.addEventListener('DOMContentLoaded', function () {
   volumePercentage.textContent = '50%';
   updateVolumeIcon(audioPlayer.volume);
 
-  progressBar.value = 0;             
-  timerNow.textContent = '0:00'; 
-  timerTotal.textContent = '0:00'; 
 
   audioPlayer.addEventListener('loadedmetadata', updateDuration);
   audioPlayer.addEventListener('timeupdate', updateProgressBar);
   progressBar.addEventListener('input', setProgress);
-  audioPlayer.addEventListener('ended', function () {
-    nextSong();
-  });
-
+  audioPlayer.addEventListener('ended', nextSong);
 });
 
 // Event listeners 

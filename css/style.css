@@ -17,9 +17,12 @@ i {
 }
 
 #player-area {
-	width: 500px;
-	border: 1px solid lightgrey;
-	padding: 15px;
+	width: 100%;
+    max-width: 500px;
+    border: 1px solid lightgrey;
+    padding: 12px;
+    margin: 12px;
+    border-radius: 24px;
 
 }
 #song-artist {
