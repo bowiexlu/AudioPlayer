@@ -113,8 +113,13 @@ function toggleShuffleOrder() {
   isShuffle = !isShuffle;
 
   if (isShuffle) {
-    shuffledList = [...songList].sort(() => 0.5 - Math.random());
+    shuffledList = [...songList];
+    for (let i = shuffledList.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
+    }
   }
+
   currentSongIndex = 0;  
   loadSong(currentSongIndex);  
   updateShuffleOrderIcons();  
@@ -263,7 +268,7 @@ function generatePlaylist() {
       });
       generatePlaylist();
     });
-    
+
     songElement.appendChild(songDuration);
 
     playlistContainer.appendChild(songElement);  
