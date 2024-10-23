@@ -33,7 +33,7 @@ const volumeControl = document.getElementById('volume-control');
 const volumePercentage = document.getElementById('volume-percentage');
 const volumeIcon = document.getElementById('volume-icon');
 const togglePlaylistButton = document.getElementById('toggle-playlist-button');
-const playlistElement = document.getElementById('playlist');
+const playlistContainer = document.getElementById('playlist');
 let lastVolume = 0.5;
 let isShuffle = false;  
 let shuffledList = [];
@@ -77,7 +77,7 @@ function togglePlayPauseButtons() {
   }
 }
 
-// Toggle play/pause function
+// Toggle play/ pause function
 function togglePlayPause() {
   if (audioPlayer.paused) {
     audioPlayer.play().then(() => {
@@ -219,7 +219,6 @@ function updateVolumeIcon(volume) {
 
 // Function to generate playlist 
 function generatePlaylist() {
-  const playlistContainer = document.getElementById('playlist');
   playlistContainer.innerHTML = '';  
 
   songList.forEach((song, index) => {
@@ -230,7 +229,10 @@ function generatePlaylist() {
       songElement.classList.add('active-song');  
     }
 
-    // Create song info elements
+    // Create song elements - left
+    const songInfo = document.createElement('div');
+    songInfo.classList.add('song-info');
+
     const songName = document.createElement('span');
     songName.textContent = song.name;
     songName.classList.add('playlist-song-name');
@@ -239,6 +241,10 @@ function generatePlaylist() {
     songArtist.textContent = song.artist;
     songArtist.classList.add('playlist-artist');
 
+    songElement.appendChild(songName);
+    songElement.appendChild(songArtist);
+    
+    // Create song elements - right
     const songDuration = document.createElement('span');
     songDuration.classList.add('playlist-duration');
 
@@ -248,15 +254,11 @@ function generatePlaylist() {
       songDuration.textContent = formatTime(tempAudio.duration);
     });
 
-    // Append song info to song element
-    songElement.appendChild(songName);
-    songElement.appendChild(songArtist);
-    songElement.appendChild(songDuration);
-
     // Add click event to play the clicked song
     songElement.addEventListener('click', () => {
       currentSongIndex = index;
       loadSong(currentSongIndex);
+
       audioPlayer.play().then(() => {
         togglePlayPauseButtons();    
       }).catch(error => {
@@ -264,6 +266,9 @@ function generatePlaylist() {
       });
       generatePlaylist();
     });
+    
+    songElement.appendChild(songInfo);
+    songElement.appendChild(songDuration);
 
     playlistContainer.appendChild(songElement);  
   });
