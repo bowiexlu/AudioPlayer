@@ -257,7 +257,12 @@ function generatePlaylist() {
     songElement.addEventListener('click', () => {
       currentSongIndex = index;
       loadSong(currentSongIndex);
-      audioPlayer.play();
+      audioPlayer.play().then(() => {
+        togglePlayPauseButtons();    
+      }).catch(error => {
+        console.error('Playback failed:', error);
+      });
+      generatePlaylist();
     });
 
     playlistContainer.appendChild(songElement);  
