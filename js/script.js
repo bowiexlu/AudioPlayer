@@ -151,6 +151,8 @@ function nextSong() {
     currentSongIndex = (currentSongIndex + 1) % songList.length;
     loadSong(currentSongIndex);
   }
+  loadSong(currentSongIndex);
+  generatePlaylist();  
   audioPlayer.play().then(() => {
     togglePlayPauseButtons();
   }).catch(error => {
@@ -162,6 +164,7 @@ function nextSong() {
 function prevSong() {
   currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
   loadSong(currentSongIndex);
+  generatePlaylist();
 }
 // Function to format time 
 function formatTime(seconds) {
@@ -169,6 +172,8 @@ function formatTime(seconds) {
   const secs = Math.floor(seconds % 60);
   return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
 }
+// Call generatePlaylist when the page loads
+document.addEventListener('DOMContentLoaded', generatePlaylist);
 
 // Update progress bar and time
 function updateProgressBar() {
@@ -230,37 +235,27 @@ function updateVolumeIcon(volume) {
 
 // Function to generate playlist 
 function generatePlaylist() {
-  const playlistBody = document.getElementById('playlist-body');
-  playlistBody.innerHTML = '';
+  const songNameElement = document.getElementById('playlist-song-name');
+  const artistElement = document.getElementById('playlist-artist');
+  const durationElement = document.getElementById('playlist-duration');
 
-  // Loop through the song list 
-  songList.forEach((song, index) => {
-    const songRow = document.createElement('div');
-    songRow.classList.add('playlist-row');
+  const currentSong = songList[currentSongIndex];
+  songNameElement.textContent = currentSong.name;
+  artistElement.textContent = currentSong.artist;
 
-    // Create spans for song name, artist, and duration
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = song.name;
-    const artistSpan = document.createElement('span');
-    artistSpan.textContent = song.artist;
-    const durationSpan = document.createElement('span');
-    durationSpan.textContent = 'Loading...'; 
+  // Create a temporary audio element to get the duration
+  const tempAudio = new Audio(currentSong.soundSrc);
 
-    songRow.appendChild(nameSpan);
-    songRow.appendChild(artistSpan);
-    songRow.appendChild(durationSpan);
-    playlistBody.appendChild(songRow);
-
-    // Load the song in the existing audioPlayer to fetch its duration
-    const tempAudio = new Audio(song.soundSrc);
-    tempAudio.addEventListener('loadedmetadata', function () {
-      durationSpan.textContent = formatTime(tempAudio.duration);
-    });
+  tempAudio.addEventListener('loadedmetadata', function () {
+    // Update the duration when metadata is loaded
+    durationElement.textContent = formatTime(tempAudio.duration);
   });
+
 }
 
 // Call the function to generate the playlist when the page is loaded
 document.addEventListener('DOMContentLoaded', generatePlaylist);
+
 // Initialize 
 document.addEventListener('DOMContentLoaded', function () {
   loadSong(currentSongIndex);
