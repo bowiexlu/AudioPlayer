@@ -270,7 +270,7 @@ function generatePlaylist() {
 }
 
 // Display or hide playlist
-togglePlaylistButton.addEventListener('click', function() {
+togglePlaylistButton.addEventListener('click', () => {
   if (playlistElement.style.display === 'none') {
       playlistElement.style.display = 'block';
       togglePlaylistButton.textContent = 'Hide Playlist';
