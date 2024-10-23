@@ -167,7 +167,7 @@ function setProgress() {
 
 // Update duration
 function updateDuration() {
-  timerTotal.textContent = formatTime(totalDuration);
+  timerTotal.textContent = formatTime(audioPlayer.duration);
 }
 
 // Volume control event listener
