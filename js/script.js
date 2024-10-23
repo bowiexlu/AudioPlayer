@@ -145,16 +145,16 @@ document.getElementById('order-button').addEventListener('click', toggleShuffleO
 // If the next song is in shuffle mode
 function nextSong() {
   if (isShuffle) {
-      currentSongIndex = (currentSongIndex + 1) % shuffledList.length;
-      loadSong(currentSongIndex);
+    currentSongIndex = (currentSongIndex + 1) % shuffledList.length;
+    loadSong(currentSongIndex);
   } else {
-      currentSongIndex = (currentSongIndex + 1) % songList.length;
-      loadSong(currentSongIndex);
+    currentSongIndex = (currentSongIndex + 1) % songList.length;
+    loadSong(currentSongIndex);
   }
   audioPlayer.play().then(() => {
-    togglePlayPauseButtons(); 
+    togglePlayPauseButtons();
   }).catch(error => {
-      console.error('Playback failed:', error);
+    console.error('Playback failed:', error);
   });
 }
 
@@ -163,15 +163,19 @@ function prevSong() {
   currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
   loadSong(currentSongIndex);
 }
+// Function to format time 
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+}
 
 // Update progress bar and time
 function updateProgressBar() {
   const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
   progressBar.value = progress;
 
-  const minutes = Math.floor(audioPlayer.currentTime / 60);
-  const seconds = Math.floor(audioPlayer.currentTime % 60);
-  timerNow.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  timerNow.textContent = formatTime(audioPlayer.currentTime);
 }
 
 // Set progress bar position
@@ -182,9 +186,8 @@ function setProgress() {
 
 // Update duration
 function updateDuration() {
-  const minutes = Math.floor(audioPlayer.duration / 60);
-  const seconds = Math.floor(audioPlayer.duration % 60);
-  timerTotal.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  const totalDuration = audioPlayer.duration;
+  timerTotal.textContent = formatTime(totalDuration);
 }
 
 // Volume control event listener
@@ -225,6 +228,39 @@ function updateVolumeIcon(volume) {
   }
 }
 
+// Function to generate playlist 
+function generatePlaylist() {
+  const playlistBody = document.getElementById('playlist-body');
+  playlistBody.innerHTML = '';
+
+  // Loop through the song list 
+  songList.forEach((song, index) => {
+    const songRow = document.createElement('div');
+    songRow.classList.add('playlist-row');
+
+    // Create spans for song name, artist, and duration
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = song.name;
+    const artistSpan = document.createElement('span');
+    artistSpan.textContent = song.artist;
+    const durationSpan = document.createElement('span');
+    durationSpan.textContent = 'Loading...'; 
+
+    songRow.appendChild(nameSpan);
+    songRow.appendChild(artistSpan);
+    songRow.appendChild(durationSpan);
+    playlistBody.appendChild(songRow);
+
+    // Load the song in the existing audioPlayer to fetch its duration
+    const tempAudio = new Audio(song.soundSrc);
+    tempAudio.addEventListener('loadedmetadata', function () {
+      durationSpan.textContent = formatTime(tempAudio.duration);
+    });
+  });
+}
+
+// Call the function to generate the playlist when the page is loaded
+document.addEventListener('DOMContentLoaded', generatePlaylist);
 // Initialize 
 document.addEventListener('DOMContentLoaded', function () {
   loadSong(currentSongIndex);
@@ -248,9 +284,10 @@ document.addEventListener('DOMContentLoaded', function () {
       updateDuration();
   });
 
-  // Update progress bar as song plays
+  // Update progress bar as and duration
   audioPlayer.addEventListener('timeupdate', updateProgressBar);
   progressBar.addEventListener('input', setProgress);
+  audioPlayer.addEventListener('loadedmetadata', updateDuration);
 
   // Automatically play the next song when current one ends
   audioPlayer.addEventListener('ended', function () {
