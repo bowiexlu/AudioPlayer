@@ -230,9 +230,6 @@ function generatePlaylist() {
     }
 
     // Create song elements - left
-    const songInfo = document.createElement('div');
-    songInfo.classList.add('song-info');
-
     const songName = document.createElement('span');
     songName.textContent = song.name;
     songName.classList.add('playlist-song-name');
@@ -267,7 +264,6 @@ function generatePlaylist() {
       generatePlaylist();
     });
     
-    songElement.appendChild(songInfo);
     songElement.appendChild(songDuration);
 
     playlistContainer.appendChild(songElement);  
