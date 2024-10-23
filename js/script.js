@@ -77,7 +77,6 @@ function togglePlayPause() {
       togglePlayPauseButtons();  
     }).catch(error => {
       console.error('Playback failed:', error);
-      alert('Unable to play audio: ' + error.message);
     });
   } else {
       audioPlayer.pause();
