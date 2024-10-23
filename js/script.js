@@ -56,6 +56,7 @@ function loadSong(songIndex) {
 
   audioPlayer.load();
   togglePlayPauseButtons();
+  generatePlaylist();
 }
 
 // Play/pause toggle button
@@ -105,7 +106,6 @@ function toggleShuffleOrder() {
   if (isShuffle) {
     shuffledList = [...songList].sort(() => 0.5 - Math.random());
   }
-
   currentSongIndex = 0;  
   loadSong(currentSongIndex);  
   updateShuffleOrderIcons();  
@@ -149,10 +149,6 @@ function formatTime(seconds) {
   const minutes = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-}
-
-function updateDuration() {
-  updateTimer(); 
 }
 
 // Update progress bar and time
@@ -214,19 +210,48 @@ function updateVolumeIcon(volume) {
 
 // Function to generate playlist 
 function generatePlaylist() {
-  const songNameElement = document.getElementById('playlist-song-name');
-  const artistElement = document.getElementById('playlist-artist');
-  const durationElement = document.getElementById('playlist-duration');
+  const playlistContainer = document.getElementById('playlist');
+  playlistContainer.innerHTML = '';  // Clear previous playlist content
 
-  const currentSong = songList[currentSongIndex];
-  songNameElement.textContent = currentSong.name;
-  artistElement.textContent = currentSong.artist;
+  songList.forEach((song, index) => {
+    const songElement = document.createElement('div');
+    songElement.classList.add('playlist-item');
 
-  // Create a temporary audio element to get the duration
-  const tempAudio = new Audio(currentSong.soundSrc);
+    if (index === currentSongIndex) {
+      songElement.classList.add('playing');  // Add class to highlight the current song
+    }
 
-  tempAudio.addEventListener('loadedmetadata', function () {
-    durationElement.textContent = formatTime(tempAudio.duration);
+    // Create song info elements
+    const songName = document.createElement('span');
+    songName.textContent = song.name;
+    songName.classList.add('playlist-song-name');
+
+    const songArtist = document.createElement('span');
+    songArtist.textContent = song.artist;
+    songArtist.classList.add('playlist-artist');
+
+    const songDuration = document.createElement('span');
+    songDuration.classList.add('playlist-duration');
+
+    // Create temporary audio element to get duration
+    const tempAudio = new Audio(song.soundSrc);
+    tempAudio.addEventListener('loadedmetadata', function () {
+      songDuration.textContent = formatTime(tempAudio.duration);
+    });
+
+    // Append song info to song element
+    songElement.appendChild(songName);
+    songElement.appendChild(songArtist);
+    songElement.appendChild(songDuration);
+
+    // Add click event to play the clicked song
+    songElement.addEventListener('click', () => {
+      currentSongIndex = index;
+      loadSong(currentSongIndex);
+      audioPlayer.play();
+    });
+
+    playlistContainer.appendChild(songElement);  
   });
 }
 
