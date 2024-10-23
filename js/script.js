@@ -84,10 +84,8 @@ function togglePlayPause() {
   }
 }
 
-// Play button event listener 
+// Play and pause button event listener 
 playButton.addEventListener('click', togglePlayPause);
-
-// Pause button event listener
 pauseButton.addEventListener('click', togglePlayPause);
 
 
@@ -105,11 +103,7 @@ function toggleShuffleOrder() {
   isShuffle = !isShuffle;
 
   if (isShuffle) {
-    shuffledList = [...songList];
-    for (let i = shuffledList.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
-    }
+    shuffledList = [...songList].sort(() => 0.5 - Math.random());
   }
 
   currentSongIndex = 0;  
@@ -125,23 +119,19 @@ function updateShuffleOrderIcons() {
   if (isShuffle) {
     shuffleButton.style.display = 'inline';  
     orderButton.style.display = 'none';      
-    shuffleButton.classList.add('active');   
   } else {
     shuffleButton.style.display = 'none';    
     orderButton.style.display = 'inline';    
-    shuffleButton.classList.remove('active');
   }
 }
-
 // Event listeners for shuffle and order icons
 document.getElementById('shuffle-button').addEventListener('click', toggleShuffleOrder);
 document.getElementById('order-button').addEventListener('click', toggleShuffleOrder);
 
-// If the next song is in shuffle mode
+// Play next song
 function nextSong() {
   currentSongIndex = (currentSongIndex + 1) % (isShuffle ? shuffledList.length : songList.length);
   loadSong(currentSongIndex);
-  generatePlaylist();
   audioPlayer.play().then(() => {
     togglePlayPauseButtons();
   }).catch(error => {
@@ -153,7 +143,6 @@ function nextSong() {
 function prevSong() {
   currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
   loadSong(currentSongIndex);
-  generatePlaylist();
 }
 // Function to format time 
 function formatTime(seconds) {
@@ -161,19 +150,6 @@ function formatTime(seconds) {
   const secs = Math.floor(seconds % 60);
   return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
 }
-// Call generatePlaylist when the page loads
-document.addEventListener('DOMContentLoaded', generatePlaylist);
-
-// Update timer function
-function updateTimer() {
-  const minutes = Math.floor(audioPlayer.duration / 60);
-  const seconds = Math.floor(audioPlayer.duration % 60);
-  timerTotal.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-}
-
-audioPlayer.addEventListener('loadedmetadata', function() {
-  updateTimer();
-});
 
 function updateDuration() {
   updateTimer(); 
@@ -195,7 +171,6 @@ function setProgress() {
 
 // Update duration
 function updateDuration() {
-  const totalDuration = audioPlayer.duration;
   timerTotal.textContent = formatTime(totalDuration);
 }
 
@@ -251,13 +226,9 @@ function generatePlaylist() {
   const tempAudio = new Audio(currentSong.soundSrc);
 
   tempAudio.addEventListener('loadedmetadata', function () {
-    // Update the duration when metadata is loaded
     durationElement.textContent = formatTime(tempAudio.duration);
   });
 }
-
-// Call the function to generate the playlist when the page is loaded
-document.addEventListener('DOMContentLoaded', generatePlaylist);
 
 // Initialize 
 document.addEventListener('DOMContentLoaded', function () {
@@ -268,16 +239,12 @@ document.addEventListener('DOMContentLoaded', function () {
   updateVolumeIcon(audioPlayer.volume);
 
   progressBar.value = 0;             
-  progressBar.style.backgroundSize = '0% 100%'; 
   timerNow.textContent = '0:00'; 
   timerTotal.textContent = '0:00'; 
 
-  audioPlayer.addEventListener('loadedmetadata', updateTimer);
+  audioPlayer.addEventListener('loadedmetadata', updateDuration);
   audioPlayer.addEventListener('timeupdate', updateProgressBar);
   progressBar.addEventListener('input', setProgress);
-  audioPlayer.addEventListener('loadedmetadata', updateDuration);
-
-  // Automatically play the next song when current one ends
   audioPlayer.addEventListener('ended', function () {
     nextSong();
   });
