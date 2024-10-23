@@ -96,6 +96,9 @@ pauseButton.addEventListener('click', togglePlayPause);
 
 // Stop the music
 function stopAudio() {
+  currentSongIndex = 0;
+  loadSong(currentSongIndex);
+  
   audioPlayer.pause();
   audioPlayer.currentTime = 0;
   togglePlayPauseButtons();
