@@ -32,6 +32,8 @@ const pauseButton = document.getElementById('pause-button');
 const volumeControl = document.getElementById('volume-control');
 const volumePercentage = document.getElementById('volume-percentage');
 const volumeIcon = document.getElementById('volume-icon');
+const togglePlaylistButton = document.getElementById('toggle-playlist-button');
+const playlistElement = document.getElementById('playlist');
 let lastVolume = 0.5;
 let isShuffle = false;  
 let shuffledList = [];
@@ -98,7 +100,7 @@ pauseButton.addEventListener('click', togglePlayPause);
 function stopAudio() {
   currentSongIndex = 0;
   loadSong(currentSongIndex);
-  
+
   audioPlayer.pause();
   audioPlayer.currentTime = 0;
   togglePlayPauseButtons();
@@ -217,15 +219,15 @@ function updateVolumeIcon(volume) {
 
 // Function to generate playlist 
 function generatePlaylist() {
-  const playlistContainer = document.getElementById('playlist');
-  playlistContainer.innerHTML = '';  // Clear previous playlist content
+  // const playlistContainer = document.getElementById('playlist');
+  playlistContainer.innerHTML = '';  
 
   songList.forEach((song, index) => {
     const songElement = document.createElement('div');
     songElement.classList.add('playlist-item');
 
     if (index === currentSongIndex) {
-      songElement.classList.add('playing');  // Add class to highlight the current song
+      songElement.classList.add('active-song');  
     }
 
     // Create song info elements
@@ -261,6 +263,17 @@ function generatePlaylist() {
     playlistContainer.appendChild(songElement);  
   });
 }
+
+// Display or hide playlist
+togglePlaylistButton.addEventListener('click', function() {
+  if (playlistElement.style.display === 'none') {
+      playlistElement.style.display = 'block';
+      togglePlaylistButton.textContent = 'Hide Playlist';
+  } else {
+      playlistElement.style.display = 'none';
+      togglePlaylistButton.textContent = 'Show Playlist';
+  }
+});
 
 // Initialize 
 document.addEventListener('DOMContentLoaded', function () {

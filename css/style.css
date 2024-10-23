@@ -65,3 +65,17 @@ i {
 .width-100 {
 	width: 100%;
 }
+
+.playlist-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.playlist-item:hover {
+    background-color: #f0f0f0;
+}
+
+.active-song {
+    background-color: #d0e6f6;
+    font-weight: bold;
+}
