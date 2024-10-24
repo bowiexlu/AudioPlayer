@@ -32,8 +32,9 @@ const pauseButton = document.getElementById('pause-button');
 const volumeControl = document.getElementById('volume-control');
 const volumePercentage = document.getElementById('volume-percentage');
 const volumeIcon = document.getElementById('volume-icon');
-const togglePlaylistButton = document.getElementById('toggle-playlist-button');
 const playlistContainer = document.getElementById('playlist');
+const togglePlaylistButton = document.getElementById('toggle-playlist-button');
+
 let lastVolume = 0.5;
 let isShuffle = false;  
 let shuffledList = [];
@@ -152,6 +153,7 @@ function nextSong() {
   loadSong(currentSongIndex);
   audioPlayer.play();
 }
+document.getElementById('next-button').addEventListener('click', nextSong);
 
 // Play previous song
 function prevSong() {
@@ -162,6 +164,7 @@ function prevSong() {
   }
   loadSong(currentSongIndex);
 }
+document.getElementById('prev-button').addEventListener('click', prevSong);
 
 // Function to format time 
 function formatTime(seconds) {
@@ -189,6 +192,21 @@ function updateDuration() {
   timerTotal.textContent = formatTime(audioPlayer.duration);
 }
 
+
+
+// Update volume icon based on volume level
+function updateVolumeIcon(volume) {
+  if (volume == 0) {
+      volumeIcon.classList.remove('fa-volume-low', 'fa-volume-high');
+      volumeIcon.classList.add('fa-volume-xmark');
+  } else if (volume > 0 && volume <= 0.5) {
+      volumeIcon.classList.remove('fa-volume-xmark', 'fa-volume-high');
+      volumeIcon.classList.add('fa-volume-low');
+  } else {
+      volumeIcon.classList.remove('fa-volume-xmark', 'fa-volume-low');
+      volumeIcon.classList.add('fa-volume-high');
+  }
+}
 // Volume control event listener
 volumeControl.addEventListener('input', function () {
   const volume = volumeControl.value;
@@ -212,20 +230,6 @@ volumeIcon.addEventListener('click', function () {
       updateVolumeIcon(lastVolume);
   }
 });
-
-// Update volume icon based on volume level
-function updateVolumeIcon(volume) {
-  if (volume == 0) {
-      volumeIcon.classList.remove('fa-volume-low', 'fa-volume-high');
-      volumeIcon.classList.add('fa-volume-xmark');
-  } else if (volume > 0 && volume <= 0.5) {
-      volumeIcon.classList.remove('fa-volume-xmark', 'fa-volume-high');
-      volumeIcon.classList.add('fa-volume-low');
-  } else {
-      volumeIcon.classList.remove('fa-volume-xmark', 'fa-volume-low');
-      volumeIcon.classList.add('fa-volume-high');
-  }
-}
 
 // Function to generate playlist 
 function generatePlaylist() {
@@ -275,7 +279,6 @@ function generatePlaylist() {
     });
 
     songElement.appendChild(songDuration);
-
     playlistContainer.appendChild(songElement);  
   });
 }
@@ -299,15 +302,20 @@ document.addEventListener('DOMContentLoaded', function () {
   volumePercentage.textContent = '50%';
   updateVolumeIcon(audioPlayer.volume);
 
+  generatePlaylist();
 
   audioPlayer.addEventListener('loadedmetadata', updateDuration);
   audioPlayer.addEventListener('timeupdate', updateProgressBar);
   progressBar.addEventListener('input', setProgress);
   audioPlayer.addEventListener('ended', nextSong);
+
+  if (isShuffle) {
+    toggleShuffleOrder();  
+  }
 });
 
-// Event listeners 
-document.getElementById('next-button').addEventListener('click', nextSong);
-document.getElementById('prev-button').addEventListener('click', prevSong);
+
+
+
 
 
