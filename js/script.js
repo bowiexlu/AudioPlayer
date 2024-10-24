@@ -235,11 +235,15 @@ volumeIcon.addEventListener('click', function () {
 function generatePlaylist() {
   playlistContainer.innerHTML = '';  
 
-  songList.forEach((song, index) => {
+  const activeList = isShuffle ? shuffledList : songList;
+
+  activeList.forEach((song, index) => {
     const songElement = document.createElement('div');
     songElement.classList.add('playlist-item');
 
-    if (index === currentSongIndex) {
+    // If it is on shuffle mode
+    if ((isShuffle && shuffledList[currentSongIndex] === song) || 
+        (!isShuffle && songList[currentSongIndex] === song)) {
       songElement.classList.add('active-song');  
     }
 

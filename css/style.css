@@ -71,6 +71,7 @@ i {
     cursor: pointer;
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 .playlist-item:hover {
@@ -84,16 +85,22 @@ i {
 
 .playlist-song-name {
 	font-weight: bold;            
-	font-size: 16px;              
+	font-size: 16px;   
+	flex-basis: 40%; 
+	text-align: left;           
   }
 
   .playlist-artist {
 	font-size: 12px;              
-	color: #666;                 
+	color: #666;
+	flex-basis: 30%; 
+  	text-align: left;                 
   }
 
 
   .playlist-duration {
 	font-size: 14px;             
-	color: #333;                  
+	color: #333;   
+	text-align: right;
+	flex-basis: 15%;               
   }
