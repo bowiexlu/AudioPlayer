@@ -40,7 +40,7 @@ let shuffledList = [];
 
 // Load song function
 function loadSong(songIndex) {
-  const song = songList[songIndex];
+  const song = isShuffle ? shuffledList[songIndex] : songList[songIndex];
   audioPlayer.src = song.soundSrc;
   albumCover.src = song.imageSrc;
   songArtist.textContent = song.artist;
@@ -144,20 +144,25 @@ document.getElementById('order-button').addEventListener('click', toggleShuffleO
 
 // Play next song
 function nextSong() {
-  currentSongIndex = (currentSongIndex + 1) % (isShuffle ? shuffledList.length : songList.length);
+  if (isShuffle) {
+    currentSongIndex = (currentSongIndex + 1) % shuffledList.length;
+  } else {
+    currentSongIndex = (currentSongIndex + 1) % songList.length;
+  }
   loadSong(currentSongIndex);
-  audioPlayer.play().then(() => {
-    togglePlayPauseButtons();
-  }).catch(error => {
-    console.error('Playback failed:', error);
-  });
+  audioPlayer.play();
 }
 
 // Play previous song
 function prevSong() {
-  currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
+  if (isShuffle) {
+    currentSongIndex = (currentSongIndex - 1 + shuffledList.length) % shuffledList.length;
+  } else {
+    currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
+  }
   loadSong(currentSongIndex);
 }
+
 // Function to format time 
 function formatTime(seconds) {
   const minutes = Math.floor(seconds / 60);

@@ -92,10 +92,6 @@ i {
 	color: #666;                 
   }
 
-  .song-info {
-	display: flex;
-	flex-direction: column;       
-  }
 
   .playlist-duration {
 	font-size: 14px;             
