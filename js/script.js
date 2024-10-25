@@ -289,11 +289,11 @@ function generatePlaylist() {
 
 // Display or hide playlist
 togglePlaylistButton.addEventListener('click', () => {
-  if (playlistElement.style.display === 'none') {
-      playlistElement.style.display = 'block';
+  if (playlistContainer.style.display === 'none') {
+      playlistContainer.style.display = 'block';
       togglePlaylistButton.textContent = 'Hide Playlist';
   } else {
-      playlistElement.style.display = 'none';
+      playlistContainer.style.display = 'none';
       togglePlaylistButton.textContent = 'Show Playlist';
   }
 });
