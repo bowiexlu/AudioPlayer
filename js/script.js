@@ -32,7 +32,7 @@ const pauseButton = document.getElementById('pause-button');
 const volumeControl = document.getElementById('volume-control');
 const volumePercentage = document.getElementById('volume-percentage');
 const volumeIcon = document.getElementById('volume-icon');
-const playlistContainer = document.getElementById('playlist');
+const playlistContainer = document.getElementById('playlist-container');
 const togglePlaylistButton = document.getElementById('toggle-playlist-button');
 
 let lastVolume = 0.5;
