@@ -67,36 +67,6 @@ function loadSong(songIndex) {
   generatePlaylist();
 }
 
-// Play/pause toggle button
-function togglePlayPauseButtons() {
-  if (audioPlayer.paused) {
-      playButton.style.display = 'inline';
-      pauseButton.style.display = 'none';
-  } else {
-      playButton.style.display = 'none';
-      pauseButton.style.display = 'inline';
-  }
-}
-
-// Toggle play/ pause function
-function togglePlayPause() {
-  if (audioPlayer.paused) {
-    audioPlayer.play().then(() => {
-      togglePlayPauseButtons();  
-    }).catch(error => {
-      console.error('Playback failed:', error);
-    });
-  } else {
-      audioPlayer.pause();
-      togglePlayPauseButtons();  
-  }
-}
-
-// Play and pause button event listener 
-playButton.addEventListener('click', togglePlayPause);
-pauseButton.addEventListener('click', togglePlayPause);
-
-
 // Stop the music
 function stopAudio() {
   currentSongIndex = 0;
@@ -108,91 +78,6 @@ function stopAudio() {
 }
 
 document.getElementById('stop-button').addEventListener('click', stopAudio);
-
-// Toggle between shuffle and order modes when icons are clicked
-function toggleShuffleOrder() {
-  isShuffle = !isShuffle;
-
-  if (isShuffle) {
-    shuffledList = [...songList];
-    for (let i = shuffledList.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
-    }
-  }
-
-  currentSongIndex = 0;  
-  loadSong(currentSongIndex);  
-  updateShuffleOrderIcons();  
-}
-
-// Update shuffle icon and order icon
-function updateShuffleOrderIcons() {
-  const shuffleButton = document.getElementById('shuffle-button');
-  const orderButton = document.getElementById('order-button');
-
-  if (isShuffle) {
-    shuffleButton.style.display = 'inline';  
-    orderButton.style.display = 'none';      
-  } else {
-    shuffleButton.style.display = 'none';    
-    orderButton.style.display = 'inline';    
-  }
-}
-// Event listeners for shuffle and order icons
-document.getElementById('shuffle-button').addEventListener('click', toggleShuffleOrder);
-document.getElementById('order-button').addEventListener('click', toggleShuffleOrder);
-
-// Play next song
-function nextSong() {
-  if (isShuffle) {
-    currentSongIndex = (currentSongIndex + 1) % shuffledList.length;
-  } else {
-    currentSongIndex = (currentSongIndex + 1) % songList.length;
-  }
-  loadSong(currentSongIndex);
-  audioPlayer.play();
-}
-document.getElementById('next-button').addEventListener('click', nextSong);
-
-// Play previous song
-function prevSong() {
-  if (isShuffle) {
-    currentSongIndex = (currentSongIndex - 1 + shuffledList.length) % shuffledList.length;
-  } else {
-    currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
-  }
-  loadSong(currentSongIndex);
-}
-document.getElementById('prev-button').addEventListener('click', prevSong);
-
-// Function to format time 
-function formatTime(seconds) {
-  const minutes = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-}
-
-// Update progress bar and time
-function updateProgressBar() {
-  const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-  progressBar.value = progress;
-
-  timerNow.textContent = formatTime(audioPlayer.currentTime);
-}
-
-// Set progress bar position
-function setProgress() {
-  const newTime = (progressBar.value / 100) * audioPlayer.duration;
-  audioPlayer.currentTime = newTime;
-}
-
-// Update duration
-function updateDuration() {
-  timerTotal.textContent = formatTime(audioPlayer.duration);
-}
-
-
 
 // Update volume icon based on volume level
 function updateVolumeIcon(volume) {
@@ -230,6 +115,117 @@ volumeIcon.addEventListener('click', function () {
       updateVolumeIcon(lastVolume);
   }
 });
+// Toggle between shuffle and order modes when icons are clicked
+function toggleShuffleOrder() {
+  isShuffle = !isShuffle;
+
+  if (isShuffle) {
+    shuffledList = [...songList];
+    for (let i = shuffledList.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
+    }
+  }
+
+  currentSongIndex = 0;  
+  loadSong(currentSongIndex);  
+  updateShuffleOrderIcons();  
+}
+
+// Update shuffle icon and order icon
+function updateShuffleOrderIcons() {
+  const shuffleButton = document.getElementById('shuffle-button');
+  const orderButton = document.getElementById('order-button');
+
+  if (isShuffle) {
+    shuffleButton.style.display = 'inline';  
+    orderButton.style.display = 'none';      
+  } else {
+    shuffleButton.style.display = 'none';    
+    orderButton.style.display = 'inline';    
+  }
+}
+// Event listeners for shuffle and order icons
+document.getElementById('shuffle-button').addEventListener('click', toggleShuffleOrder);
+document.getElementById('order-button').addEventListener('click', toggleShuffleOrder);
+
+// Function to format time 
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+}
+
+// Update progress bar and time
+function updateProgressBar() {
+  const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+  progressBar.value = progress;
+
+  timerNow.textContent = formatTime(audioPlayer.currentTime);
+}
+
+// Set progress bar position
+function setProgress() {
+  audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
+}
+
+// Update duration
+function updateDuration() {
+  timerTotal.textContent = formatTime(audioPlayer.duration);
+}
+
+// Play previous song
+function prevSong() {
+  if (isShuffle) {
+    currentSongIndex = (currentSongIndex - 1 + shuffledList.length) % shuffledList.length;
+  } else {
+    currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
+  }
+  loadSong(currentSongIndex);
+}
+document.getElementById('prev-button').addEventListener('click', prevSong);
+
+// Play/pause toggle button
+function togglePlayPauseButtons() {
+  if (audioPlayer.paused) {
+      playButton.style.display = 'inline';
+      pauseButton.style.display = 'none';
+  } else {
+      playButton.style.display = 'none';
+      pauseButton.style.display = 'inline';
+  }
+}
+
+// Toggle play/ pause function
+function togglePlayPause() {
+  if (audioPlayer.paused) {
+    audioPlayer.play().then(() => {
+      togglePlayPauseButtons();  
+    }).catch(error => {
+      console.error('Playback failed:', error);
+    });
+  } else {
+      audioPlayer.pause();
+      togglePlayPauseButtons();  
+  }
+}
+
+// Play and pause button event listener 
+playButton.addEventListener('click', togglePlayPause);
+pauseButton.addEventListener('click', togglePlayPause);
+
+// Play next song
+function nextSong() {
+  if (isShuffle) {
+    currentSongIndex = (currentSongIndex + 1) % shuffledList.length;
+  } else {
+    currentSongIndex = (currentSongIndex + 1) % songList.length;
+  }
+  loadSong(currentSongIndex);
+  audioPlayer.play();
+}
+document.getElementById('next-button').addEventListener('click', nextSong);
+
 
 // Function to generate playlist 
 function generatePlaylist() {
