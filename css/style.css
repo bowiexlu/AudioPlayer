@@ -30,16 +30,9 @@ i {
     margin: 12px;
     border-radius: 24px;
 }
-@media (max-width: 600px) {
-	#player-area {
-        padding: 10px;
-        margin: 8px;
-        border-radius: 16px;
-    }
-}
 
 #song-artist {
-	font-size: 28px;
+	font-size: 20px;
 	padding: 12px;
 }
 
@@ -115,7 +108,8 @@ i {
 	font-size: 16px;             
 	color: #333;   
 	text-align: right;
-	flex-basis: 15%;               
+	flex-basis: 15%;     
+	font-weight: bold;          
 }
 #progress-bar {
 	width: 90%;
@@ -158,4 +152,22 @@ i {
   
   #toggle-playlist-button:hover {
 	background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+	#player-area {
+        padding: 10px;
+        margin: 8px;
+        border-radius: 16px;
+    }
+	.now-playing {
+		font-size: 1.6rem;
+	}
+	#song-artist {
+		font-size: 18px;
+		padding: 6px;
+	}
+	.p-20 {
+		padding: 16px;
+	}
 }
