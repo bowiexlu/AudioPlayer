@@ -18,13 +18,13 @@ i {
 	display: flex;
 	justify-content: center;
 	align-items: center;
- 	max-height: 100vh;
+	height: fit-content;
   	padding: 20px;
 }
 
 #player-area {
 	width: 100%;
-    max-width: 500px;
+    max-width: 400px;
     border: 1px solid lightgrey;
     padding: 12px;
     margin: 12px;
