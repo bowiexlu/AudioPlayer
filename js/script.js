@@ -161,6 +161,7 @@ function updateProgressBar() {
   const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
   progressBar.value = progress;
 
+  progressBar.style.backgroundSize = `${progress}% 100%`; 
   timerNow.textContent = formatTime(audioPlayer.currentTime);
 }
 
