@@ -24,7 +24,8 @@ i {
 
 #player-area {
 	width: 100%;
-    max-width: 500px;
+    max-width: 450px;
+	height: 90%;
     border: 1px solid lightgrey;
     padding: 12px;
     margin: 12px;
