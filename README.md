@@ -1,4 +1,10 @@
-Audio player
+# Project Name Audio player
+
+## Live Demo 
+https://bowiexlu.github.io/AudioPlayer/
+
+
+## This is the description of my project:
 
 Skapa en wireframe och planera en funktionslista.
 
